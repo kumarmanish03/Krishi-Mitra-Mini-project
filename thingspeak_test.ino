@@ -7,7 +7,7 @@
 #include <WiFi.h>
 #include "ThingSpeak.h"
 #include "DHT.h"
-#include "secrets.h"
+#include "arduino_secrets.h"
 
 const char* ssid = SECRET_SSID;
 const char* password = SECRET_PASS;
@@ -48,7 +48,7 @@ void setup() {
 
   dht.begin(); // //Initialize DHT11
 
-  WiFi.mode(WIFI_STA);   
+//  WiFi.mode(WIFI_STA);   
   ThingSpeak.begin(client);  // Initialize ThingSpeak
 }
 
