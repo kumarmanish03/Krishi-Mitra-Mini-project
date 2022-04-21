@@ -158,7 +158,7 @@ void loop() {
       Serial.println("Problem updating channel. HTTP error code " + String(x));
     }
 
-    println("\n\n");
+    Serial.println("\n\n");
     
     lastTime = millis();
   }
