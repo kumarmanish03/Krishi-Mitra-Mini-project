@@ -1,4 +1,0 @@
-#define SECRET_SSID "Manish"
-#define SECRET_PASS "@kumar97531"
-#define SECRET_CHNL "1709427"
-#define SECRET_APIK "34E2A0W0OIQYJOXQ"
