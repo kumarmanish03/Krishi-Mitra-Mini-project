@@ -1,6 +1,12 @@
 /*
  * 
  * @refer: https://diyi0t.com/rain-sensor-tutorial-for-arduino-and-esp8266/
+ * @power-supply: 
+ *  LDR - 5V
+ *  Ultrasonic - 5V
+ *  Soil Moisture - 3V
+ *  Rain detector - 5V
+ *  DHT11 - 5V
  * 
  */
 
@@ -54,6 +60,9 @@ void setup() {
 
 void loop() {
   if ((millis() - lastTime) > timerDelay) {
+
+
+    /* Connect to Wifi */
     
     if(WiFi.status() != WL_CONNECTED){
       Serial.print("Attempting to connect...");
@@ -64,6 +73,9 @@ void loop() {
       } 
       Serial.println("\nConnected!!!");
     }
+
+
+    /* LDR sensor code */
 
     light = analogRead(ldrPin);
     
@@ -82,6 +94,8 @@ void loop() {
       Serial.println(", Very bright");
     }
 
+
+    /* Ultrasonic sensor code */
     
     digitalWrite(trigPin, LOW); // Clears the trigPin condition
     delayMicroseconds(2);
@@ -93,6 +107,9 @@ void loop() {
     Serial.print("Distance: ");
     Serial.print(distance);
     Serial.println(" cm");
+
+
+    /* Soil Moisture sensor code */
 
     moisture = analogRead(soilMoisture);
 
@@ -107,10 +124,13 @@ void loop() {
       Serial.println(", Dry soil");
     }
 
+
+    /* Rain detector sensor code */
+
     rainValue = analogRead(rainSensor);
 
     Serial.print("Raining Intensity: ");
-    Serial.println(rainValue);
+    Serial.print(rainValue);
 
     if (rainValue < 1500) {
       Serial.println(", Heavy Rain");
@@ -119,6 +139,9 @@ void loop() {
     } else {
       Serial.println(", No Rain");
     }
+
+
+    /* DHT11 sensor code */
 
     h = dht.readHumidity();
     t = dht.readTemperature();
@@ -139,12 +162,15 @@ void loop() {
       Serial.println(F("Failed to read from DHT sensor!"));
       return;
     }
+
+
+    /* Sending data to Thingspeak cloud server */
  
     // set the fields with the values
-    ThingSpeak.setField(1, 321);
-    ThingSpeak.setField(2, 321);
-    ThingSpeak.setField(3, 321);
-    ThingSpeak.setField(4, 321);
+    ThingSpeak.setField(1, light);
+    ThingSpeak.setField(2, distance);
+    ThingSpeak.setField(3, moisture);
+    ThingSpeak.setField(4, rainValue);
     ThingSpeak.setField(5, t);
     ThingSpeak.setField(6, h);
     ThingSpeak.setField(7, hic);
@@ -153,6 +179,9 @@ void loop() {
 
     if(x == 200){
       Serial.println("Channel update successful.");
+    }
+    else if(x == -401){
+      Serial.println("Waiting for channel update...");
     }
     else{
       Serial.println("Problem updating channel. HTTP error code " + String(x));
